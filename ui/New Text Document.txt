@@ -1,0 +1,86 @@
+Write-Host "Setting up Golden Tiger Shoes (Vue 3 + Vite + Flask)..." -ForegroundColor Green
+
+# Check if Node.js is installed
+try {
+    $nodeVersion = node --version
+    Write-Host "Node.js version: $nodeVersion" -ForegroundColor Yellow
+} catch {
+    Write-Host "ERROR: Node.js is not installed. Please install Node.js first." -ForegroundColor Red
+    exit 1
+}
+
+# Check if Python is installed
+try {
+    $pythonVersion = python --version
+    Write-Host "Python version: $pythonVersion" -ForegroundColor Yellow
+} catch {
+    Write-Host "ERROR: Python is not installed. Please install Python first." -ForegroundColor Red
+    exit 1
+}
+
+# Setup frontend
+Write-Host "`nSetting up Vue 3 frontend..." -ForegroundColor Cyan
+cd ui
+npm install
+cd ..
+
+# Create virtual environment for backend
+Write-Host "`nSetting up Python backend..." -ForegroundColor Cyan
+python -m venv venv
+.\venv\Scripts\Activate
+
+# Install backend requirements
+pip install -r backend\requirements.txt
+
+# Initialize database
+Write-Host "`nInitializing database..." -ForegroundColor Cyan
+python backend\models.py
+
+# Create asset directories
+Write-Host "`nCreating asset directories..." -ForegroundColor Cyan
+$assetDir = "ui\src\assets\shoes"
+if (-not (Test-Path $assetDir)) {
+    New-Item -ItemType Directory -Path $assetDir | Out-Null
+    $products = @("phoenix", "dragon", "tiger")
+    $colors = @{
+        "phoenix" = @("gold", "black", "red")
+        "dragon" = @("green", "brown", "black")
+        "tiger" = @("orange", "white", "blue")
+    }
+
+    foreach ($product in $products) {
+        foreach ($color in $colors[$product]) {
+            $dir = "$assetDir\$product\$color"
+            New-Item -ItemType Directory -Path $dir | Out-Null
+            1..9 | ForEach-Object {
+                $pad = $_.ToString("00")
+                # Create placeholder files (will be replaced with actual images)
+                $img = New-Item -Path "$dir\img$pad.jpg" -ItemType File -Force
+                # Add a small comment to make files non-empty
+                Set-Content $img -Value "Placeholder image for $product $color - view $_"
+            }
+        }
+    }
+
+    # Create placeholder.jpg with proper base64 image
+    $placeholderPath = "ui\src\assets\placeholder.jpg"
+    if (-not (Test-Path $placeholderPath)) {
+        $placeholderData = @'
+/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0aHBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/2wBDAQkJCQwLDBgNDRgyIRwhMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjL/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwCwAA8A/9k=
+'@
+        try {
+            [System.Convert]::FromBase64String($placeholderData) | Set-Content -Path $placeholderPath -AsByteStream
+            Write-Host "Created placeholder image" -ForegroundColor Green
+        } catch {
+            Write-Host "Warning: Could not create placeholder image" -ForegroundColor Yellow
+        }
+    }
+}
+
+Write-Host "`n✅ Setup complete!" -ForegroundColor Green
+Write-Host "`nTo run the application:" -ForegroundColor Yellow
+Write-Host "1. Frontend (Terminal 1): cd ui && npm run dev" -ForegroundColor White
+Write-Host "2. Backend (Terminal 2): .\venv\Scripts\Activate && python backend\app.py" -ForegroundColor White
+Write-Host "`nFrontend will be at: http://localhost:3000" -ForegroundColor Cyan
+Write-Host "Backend API will be at: http://localhost:5000" -ForegroundColor Cyan
+Write-Host "`n🐅 Golden Tiger Shoes is ready to roar!" -ForegroundColor Magenta

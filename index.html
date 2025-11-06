@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Golden Tiger Shoes — Street & Legend</title>
+  <link rel="stylesheet" href="/static/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;600&family=Rye&family=Staatliches&display=swap" rel="stylesheet">
+</head>
+<body class="theme-mafia">
+  <header class="site-header">
+    <div class="brand">
+      <div class="logo">GOLDEN TIGER</div>
+      <div class="tag">Street × Legend — Summer 2026</div>
+    </div>
+    <nav class="cta">
+      <button id="loginBtn" class="btn gold">Dashboard</button>
+    </nav>
+  </header>
+  <main class="hero">
+    <section class="hero-left">
+      <h1 class="headline">Street. Legend. Loyalty.</h1>
+      <p class="lead">Bold, lacquered, cinematic — limited Summer 2026 shoe lineup. 9-angle viewer. Multi-currency display.</p>
+      <div class="controls">
+        <label>Product
+          <select id="productSelect">
+            <option value="phoenix">Phoenix Sandals</option>
+            <option value="dragon">Dragon Boots</option>
+            <option value="tiger">Tiger Sneakers</option>
+          </select>
+        </label>
+        <label>Color
+          <select id="colorSelect"></select>
+        </label>
+        <label>Currency
+          <select id="currencySelect">
+            <option>THB</option>
+            <option>USD</option>
+            <option>SGD</option>
+            <option>MYR</option>
+            <option>CNY</option>
+          </select>
+        </label>
+        <div class="price" id="priceDisplay">—</div>
+      </div>
+      <div class="cta-row">
+        <button id="inquireBtn" class="btn red">Send Inquiry</button>
+        <button id="leadBtn" class="btn glass">Add to Leads</button>
+      </div>
+    </section>
+    <section class="hero-right">
+      <div class="viewer">
+        <div class="main-image" id="mainImageWrap">
+          <img id="angleImg" src="/static/assets/placeholder.jpg" alt="shoe view">
+        </div>
+        <div class="thumbs" id="thumbs"></div>
+        <div class="swatches" id="swatches"></div>
+      </div>
+    </section>
+  </main>
+  <footer class="site-footer">
+    <div>Golden Tiger Shoes — Internal SaaS • Summer 2026</div>
+  </footer>
+  <script src="/static/script.js"></script>
+</body>
+</html>
